@@ -30,6 +30,12 @@ public class GrafoListaAdyacenciaTest {
         grafo.addArista(2, 3);
     }
 
+    private void setupStage3() {
+        grafo = new GrafoListaAdyacencia<>(false);
+        grafo.addVertice(1);
+        grafo.addVertice(2);
+    }
+
     @Test
     public void addVerticeTest() {
         setupStage1();
@@ -48,10 +54,6 @@ public class GrafoListaAdyacenciaTest {
         int sizeAfter = grafo.getVertices().size();
         assertEquals(sizeBefore, sizeAfter);
     }
-
-    //OTRO
-    //TEST
-    //AQUI
 
     @Test
     public void DeleteVerticeTest() {
@@ -96,10 +98,6 @@ public class GrafoListaAdyacenciaTest {
         assertEquals(0 , grafo.getVertices().get(2).getAristas().size());
     }
 
-    //OTRO
-    //TEST
-    //AQUI
-
     @Test
     public void testDeleteAristaTest() {
         setupStage1();
@@ -130,24 +128,52 @@ public class GrafoListaAdyacenciaTest {
         assertEquals(1 , grafo.getAristas().size());
     }
 
-
-
     @Test
-    public void testBFS() {
-        setupStage1();
-        Assert.assertTrue(grafo.BFS(1));
-        Assert.assertFalse(grafo.BFS(3));
+    public void searchVerticeExistingTest() {
+        setupStage3();
+        Vertice<Integer> vertice = grafo.searchVertice(2);
+        assertNotNull(vertice);
+        assertEquals(Integer.valueOf(2), vertice.getValue());
     }
 
     @Test
-    public void testBFSGDisconnected() {
+    public void searchVerticeNonExistingTest() {
+        setupStage3();
+        Vertice<Integer> vertice = grafo.searchVertice(4);
+        assertNull(vertice);
+    }
+
+    @Test
+    public void searchVertice() {
+        setupStage3();
+        Vertice<Integer> vertice = grafo.searchVertice(10);
+        assertNull(vertice);
+        Vertice<Integer> vertice1 = grafo.searchVertice(1);
+        assertEquals(Integer.valueOf(1), vertice1.getValue());
+    }
+
+    @Test
+    public void BFSTest() {
+        setupStage1();
+        Assert.assertTrue(grafo.BFS(1));
+    }
+
+    @Test
+    public void BFSGDisconnectedTest() {
         setupStage2();
         grafo.addVertice(6);
         Assert.assertFalse(grafo.BFS(6));
     }
 
     @Test
-    public void testDFS() {
+    public void BFS1Test() {
+        setupStage2();
+        Assert.assertTrue(grafo.BFS(1));
+        Assert.assertFalse(grafo.BFS(3));
+    }
+
+    @Test
+    public void DFSTest() {
         setupStage1();
         Assert.assertEquals(1, grafo.DFS());
         grafo.addVertice(4);
@@ -156,12 +182,21 @@ public class GrafoListaAdyacenciaTest {
     }
 
     @Test
-    public void testDFSGMultipleTrees() {
+    public void DFSGMultipleTreesTest() {
         setupStage2();
         grafo.addVertice(9);
         grafo.addVertice(8);
         grafo.addArista(8,9);
         Assert.assertEquals(2, grafo.DFS());
+    }
+
+    @Test
+    public void DFSNoVerticesTest(){
+        setupStage1();
+        grafo.deleteVertice(1);
+        grafo.deleteVertice(2);
+        grafo.deleteVertice(3);
+        Assert.assertEquals(0, grafo.DFS());
     }
 
 }
